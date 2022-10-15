@@ -130,12 +130,16 @@ def idf_corpus(dict_corpus,N_corpus):
 # 2. It iterates through terms in document.
 # 3. If the term in document does not exit in IDF, it sets to 0.
 # 4. Else it multiplies term freqeuncy by IDF.
+
 def tf_idf(post_list,idf_matrix):
     weight_matrix =[]
     for i, j in post_list.items():
         idf ={}
         for k in j:
-            idf[k] = idf_matrix[k]*j[k]
+            if k not in idf_matrix:
+                idf_matrix[k] = 0
+            else:
+                idf[k] = idf_matrix[k]*j[k]
         weight_matrix.append(idf)                       
     return weight_matrix
 
@@ -241,25 +245,6 @@ cord19_index_time = str(datetime.timedelta(seconds=cord19_index_end-cord19_index
 print('Execution time of building Cord19 dictionary and inverted index: ' + cord19_index_time[0])
 print("")
 
-# Cord19 Keyword
-cord19_key_dict_pos_output = dictionary_list(cord19_key_posting_list_output)
-cord19_key_byte_file = inverted_file(cord19_key_dict_pos_output.keys(), cord19_key_posting_list_output)
-Store_Inverted_bin(cord19_key_byte_file, "cord19_key")
-original_key_sized = os.path.getsize('data/cord19.topics.keyword.txt')
-print('Size of Cord19 Keyword original_text: ' + str(round(original_key_sized/(1024*1024), 4)) + ' MB')
-Inverted_key_size = os.path.getsize('Inverted_File/inverted_file_cord19_key_binary.bin')
-print('Size of Cord19 Keyword Inverted File: ' + str(round(Inverted_key_size/(1024*1024), 4)) + ' MB')
-print("")
-
-# Cord19 Question
-cord19_qs_dict_pos_output = dictionary_list(cord19_qs_posting_list_output)
-cord19_qs_byte_file = inverted_file(cord19_qs_dict_pos_output.keys(), cord19_qs_posting_list_output)
-Store_Inverted_bin(cord19_qs_byte_file, "cord19_qs")
-original_qs_sized = os.path.getsize('data/cord19.topics.question.txt')
-print('Size of Cord19 Question original_text: ' + str(round(original_qs_sized/(1024*1024), 4)) + ' MB')
-Inverted_qs_size = os.path.getsize('Inverted_File/inverted_file_cord19_key_binary.bin')
-print('Size of Cord19 Question Inverted File: ' + str(round(Inverted_qs_size/(1024*1024), 4)) + ' MB')
-print("")
 
 print("")
 process_start = time.time()
@@ -269,22 +254,20 @@ cord19_weight = tf_idf(cord19_term_freq, idf_matrix)
 cord19_length = vector_length(cord19_weight)
 
 print("Computing IDF, TF-IDF, Vector Length for Cord19 Keyword Query")
-cord19_key_idf_matrix = idf_corpus(cord19_key_dict_pos_output,len(cord19_key_normalized_text))
-cord19_key_weight = tf_idf(cord19_key_term_freq, cord19_key_idf_matrix)
+cord19_key_weight = tf_idf(cord19_key_term_freq, idf_matrix)
 cord19_key_length = vector_length(cord19_key_weight)
 
 print("Computing IDF, TF-IDF, Vector Length for Cord19 Question Query")
-cord19_qs_idf_matrix = idf_corpus(cord19_qs_dict_pos_output,len(cord19_qs_normalized_text))
-cord19_qs_weight = tf_idf(cord19_qs_term_freq, cord19_qs_idf_matrix)
+cord19_qs_weight = tf_idf(cord19_qs_term_freq, idf_matrix)
 cord19_qs_length = vector_length(cord19_qs_weight)
 
 print("Computing Cosine Score for Keyword")
 cos_score_keyword = cosine_similarities(cord19_weight, cord19_key_weight, cord19_length, cord19_key_length, cord19_key_term_freq)
-score_ranking(cord19_weight, cos_score_keyword, 'dcho13','dcho13-a.txt' )
+score_ranking(cord19_weight, cos_score_keyword, 'dcho13','Result_output/dcho13-a.txt' )
 
 print("Computing Cosine Score for Question")
 cos_score_question = cosine_similarities(cord19_weight, cord19_qs_weight, cord19_length, cord19_qs_length, cord19_qs_term_freq)
-score_ranking(cord19_weight, cos_score_question, 'dcho13','dcho13-b.txt' )
+score_ranking(cord19_weight, cos_score_question, 'dcho13','Result_output/dcho13-b.txt' )
 process_end = time.time()
 process_time = str(datetime.timedelta(seconds=process_end-process_start)).split(".")
 print('Execution time of process all topics: ' + process_time[0])
