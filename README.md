@@ -8,3 +8,4 @@ Implemented Machine Learning Algorithms from Scratch
 ## PA_2: Inverted Files
 ## PA_3: Computing Document Similarity
  - Cosine Similarities
+## PA_4: Binary Text Classification
