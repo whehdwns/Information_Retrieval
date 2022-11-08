@@ -10,3 +10,5 @@ Implemented Machine Learning Algorithms from Scratch
  - Cosine Similarities
 ## PA_4: Binary Text Classification
 ## PA_5: Near Duplicate Detection
+ - Jaccard Similarity
+ - MinHashing
