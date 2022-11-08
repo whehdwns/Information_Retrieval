@@ -9,3 +9,4 @@ Implemented Machine Learning Algorithms from Scratch
 ## PA_3: Computing Document Similarity
  - Cosine Similarities
 ## PA_4: Binary Text Classification
+## PA_5: Near Duplicate Detection
