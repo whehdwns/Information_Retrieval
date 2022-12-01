@@ -12,3 +12,5 @@ Implemented Machine Learning Algorithms from Scratch
 ## PA_5: Near Duplicate Detection
  - Jaccard Similarity
  - MinHashing
+## Course Project
+ - Amazon Fake Review Detection using various Machine Learning Models 
