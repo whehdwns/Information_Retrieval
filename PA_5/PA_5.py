@@ -183,7 +183,7 @@ def cluster_doc(df, N):
                     comb_doc_list.append(k[1])
         comb_doc.append(comb_doc_list)
     sorted_doc =[]
-    for i in tz3:
+    for i in comb_doc:
         if len(i) !=0:
             sorted_doc.append(sorted(set(i)))
     first_doc=[]
